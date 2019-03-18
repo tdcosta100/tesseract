@@ -5,6 +5,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security;
+#if NETFULL && !NET20
+using System.Windows.Media.Imaging;
+#endif
 using Tesseract.Internal;
 
 namespace Tesseract
@@ -348,6 +351,78 @@ namespace Tesseract
             return page;
         }
 
+#if !NET20
+        /// <summary>
+        /// Process the specified bitmap image.
+        /// </summary>
+        /// <remarks>
+        /// Please consider <see cref="Process(Pix, PageSegMode?)"/> instead. This is because
+        /// this method must convert the bitmap to a pix for processing which will add additional overhead.
+        /// Leptonica also supports a large number of image pre-processing functions as well.
+        /// </remarks>
+        /// <param name="image">The image to process.</param>
+        /// <param name="pageSegMode">The page segmentation mode.</param>
+        /// <returns></returns>
+        public Page Process(BitmapSource image, PageSegMode? pageSegMode = null)
+        {
+            return Process(image, new Rect(0, 0, image.PixelWidth, image.PixelHeight), pageSegMode);
+        }
+
+        /// <summary>
+        /// Process the specified bitmap image.
+        /// </summary>
+        /// <remarks>
+        /// Please consider <see cref="Process(Pix, String, PageSegMode?)"/> instead. This is because
+        /// this method must convert the bitmap to a pix for processing which will add additional overhead.
+        /// Leptonica also supports a large number of image pre-processing functions as well.
+        /// </remarks>
+        /// <param name="image">The image to process.</param>
+        /// <param name="inputName">Sets the input file's name, only needed for training or loading a uzn file.</param>
+        /// <param name="pageSegMode">The page segmentation mode.</param>
+        /// <returns></returns>
+        public Page Process(BitmapSource image, string inputName, PageSegMode? pageSegMode = null)
+        {
+            return Process(image, inputName, new Rect(0, 0, image.PixelWidth, image.PixelHeight), pageSegMode);
+        }
+
+        /// <summary>
+        /// Process the specified bitmap image.
+        /// </summary>
+        /// <remarks>
+        /// Please consider <see cref="TesseractEngine.Process(Pix, Rect, PageSegMode?)"/> instead. This is because
+        /// this method must convert the bitmap to a pix for processing which will add additional overhead.
+        /// Leptonica also supports a large number of image pre-processing functions as well.
+        /// </remarks>
+        /// <param name="image">The image to process.</param>
+        /// <param name="region">The region of the image to process.</param>
+        /// <param name="pageSegMode">The page segmentation mode.</param>
+        /// <returns></returns>
+        public Page Process(BitmapSource image, Rect region, PageSegMode? pageSegMode = null)
+        {
+            return Process(image, null, region, pageSegMode);
+        }
+
+        /// <summary>
+        /// Process the specified bitmap image.
+        /// </summary>
+        /// <remarks>
+        /// Please consider <see cref="TesseractEngine.Process(Pix, String, Rect, PageSegMode?)"/> instead. This is because
+        /// this method must convert the bitmap to a pix for processing which will add additional overhead.
+        /// Leptonica also supports a large number of image pre-processing functions as well.
+        /// </remarks>
+        /// <param name="image">The image to process.</param>
+        /// <param name="inputName">Sets the input file's name, only needed for training or loading a uzn file.</param>
+        /// <param name="region">The region of the image to process.</param>
+        /// <param name="pageSegMode">The page segmentation mode.</param>
+        /// <returns></returns>
+        public Page Process(BitmapSource image, string inputName, Rect region, PageSegMode? pageSegMode = null)
+        {
+            var pix = PixConverter.ToPix(image);
+            var page = Process(pix, inputName, region, pageSegMode);
+            new PageDisposalHandle(page, pix);
+            return page;
+        }
+#endif
 #endif
 
         protected override void Dispose(bool disposing)
@@ -428,7 +503,7 @@ namespace Tesseract
             }
         }
 
-        #region Config
+#region Config
 
         /// <summary>
         /// Gets or sets default <see cref="PageSegMode" /> mode used by <see cref="Tesseract.TesseractEngine.Process(Pix, Rect, PageSegMode?)" />.
@@ -556,15 +631,15 @@ namespace Tesseract
             return Interop.TessApi.Native.BaseApiPrintVariablesToFile(handle, filename) != 0;
         }
 
-        #endregion Config
+#endregion Config
 
-        #region Event Handlers
+#region Event Handlers
 
         private void OnIteratorDisposed(object sender, EventArgs e)
         {
             processCount--;
         }
 
-        #endregion Event Handlers
+#endregion Event Handlers
     }
 }

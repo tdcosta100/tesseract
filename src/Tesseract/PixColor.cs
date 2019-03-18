@@ -6,7 +6,7 @@ using System.Text;
 namespace Tesseract
 {
     [StructLayout(LayoutKind.Sequential, Pack=1)]
-	public struct PixColor : IEquatable<PixColor>
+    public struct PixColor : IEquatable<PixColor>
     {
         private byte red;
         private byte blue;
@@ -62,42 +62,54 @@ namespace Tesseract
         {
             return new PixColor(color.R, color.G, color.B, color.A);
         }
+
+#if !NET20
+        public static explicit operator System.Windows.Media.Color(PixColor color)
+        {
+            return System.Windows.Media.Color.FromArgb(color.alpha, color.red, color.green, color.blue);
+        }
+
+        public static explicit operator PixColor(System.Windows.Media.Color color)
+        {
+            return new PixColor(color.R, color.G, color.B, color.A);
+        }
+#endif
 #endif
 
 
-#region Equals and GetHashCode implementation
+        #region Equals and GetHashCode implementation
         public override bool Equals(object obj)
-		{
-			return (obj is PixColor) && Equals((PixColor)obj);
-		}
-        
-		public bool Equals(PixColor other)
-		{
-			return this.red == other.red && this.blue == other.blue && this.green == other.green && this.alpha == other.alpha;
-		}
-        
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
-			unchecked {
-				hashCode += 1000000007 * red.GetHashCode();
-				hashCode += 1000000009 * blue.GetHashCode();
-				hashCode += 1000000021 * green.GetHashCode();
-				hashCode += 1000000033 * alpha.GetHashCode();
-			}
-			return hashCode;
-		}
-        
-		public static bool operator ==(PixColor lhs, PixColor rhs)
-		{
-			return lhs.Equals(rhs);
-		}
-        
-		public static bool operator !=(PixColor lhs, PixColor rhs)
-		{
-			return !(lhs == rhs);
-		}
-#endregion
+        {
+            return (obj is PixColor) && Equals((PixColor)obj);
+        }
+
+        public bool Equals(PixColor other)
+        {
+            return this.red == other.red && this.blue == other.blue && this.green == other.green && this.alpha == other.alpha;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            unchecked {
+                hashCode += 1000000007 * red.GetHashCode();
+                hashCode += 1000000009 * blue.GetHashCode();
+                hashCode += 1000000021 * green.GetHashCode();
+                hashCode += 1000000033 * alpha.GetHashCode();
+            }
+            return hashCode;
+        }
+
+        public static bool operator ==(PixColor lhs, PixColor rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(PixColor lhs, PixColor rhs)
+        {
+            return !(lhs == rhs);
+        }
+        #endregion
 
         public override string ToString()
         {

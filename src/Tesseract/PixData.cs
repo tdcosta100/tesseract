@@ -39,7 +39,7 @@ namespace Tesseract
             Interop.LeptonicaApi.Native.pixEndianByteSwap(Pix.Handle);
         }
 
-#if Net45
+#if NET45 || NET47
        	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static uint EncodeAsRGBA(byte red, byte green, byte blue, byte alpha)
@@ -53,10 +53,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 1bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataBit(uint* data, int index)
+        public static uint GetDataBit(uint* data, int index)
 		{
 			return (*(data + ((index) >> 5)) >> (31 - ((index) & 31))) & 1;			
 		}
@@ -65,10 +65,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 1bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataBit(uint* data, int index, uint value)
+        public static void SetDataBit(uint* data, int index, uint value)
 		{
 			uint* wordPtr = data + ((index) >> 5);
             *wordPtr &= ~(0x80000000 >> ((index) & 31));
@@ -79,10 +79,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 2bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataDIBit(uint* data, int index)
+        public static uint GetDataDIBit(uint* data, int index)
 		{
 			return (*(data + ((index) >> 4)) >> (2 * (15 - ((index) & 15)))) & 3;	
 		}
@@ -92,10 +92,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 2bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataDIBit(uint* data, int index, uint value)
+        public static void SetDataDIBit(uint* data, int index, uint value)
 		{
 			uint* wordPtr = data + ((index) >> 4);
             *wordPtr &= ~(0xc0000000 >> (2 * ((index) & 15)));
@@ -106,10 +106,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 4bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataQBit(uint* data, int index)
+        public static uint GetDataQBit(uint* data, int index)
 		{
 			return (*(data + ((index) >> 3)) >> (4 * (7 - ((index) & 7)))) & 0xf;			
 		}
@@ -118,10 +118,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 4bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataQBit(uint* data, int index, uint value)
+        public static void SetDataQBit(uint* data, int index, uint value)
 		{
 			uint* wordPtr = data + ((index) >> 3);
             *wordPtr &= ~(0xf0000000 >> (4 * ((index) & 7)));
@@ -132,10 +132,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 8bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataByte(uint* data, int index)
+        public static uint GetDataByte(uint* data, int index)
 		{
 			// Must do direct size comparison to detect x64 process, since in this will be jited out and results in a lot faster code (e.g. 6x faster for image conversion)
 			if(IntPtr.Size == 8) {
@@ -151,10 +151,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 8bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataByte(uint* data, int index, uint value)
+        public static void SetDataByte(uint* data, int index, uint value)
 		{			
 			// Must do direct size comparison to detect x64 process, since in this will be jited out and results in a lot faster code (e.g. 6x faster for image conversion)
 			if(IntPtr.Size == 8) {
@@ -171,10 +171,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 16bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataTwoByte(uint* data, int index)
+        public static uint GetDataTwoByte(uint* data, int index)
 		{	
 			// Must do direct size comparison to detect x64 process, since in this will be jited out and results in a lot faster code (e.g. 6x faster for image conversion)
 			if(IntPtr.Size == 8) {
@@ -190,10 +190,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 16bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataTwoByte(uint* data, int index, uint value)
+        public static void SetDataTwoByte(uint* data, int index, uint value)
 		{
 			// Must do direct size comparison to detect x64 process, since in this will be jited out and results in a lot faster code (e.g. 6x faster for image conversion)
 			if(IntPtr.Size == 8) {
@@ -209,10 +209,10 @@ namespace Tesseract
         /// <summary>
         /// Gets the pixel value for a 32bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static uint GetDataFourByte(uint* data, int index)
+        public static uint GetDataFourByte(uint* data, int index)
 		{
          	return *(data + index);		
 		}
@@ -221,10 +221,10 @@ namespace Tesseract
         /// <summary>
         /// Sets the pixel value for a 32bpp image.
         /// </summary>
-#if Net45
+#if NET45 || NET47
       	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-		public static void SetDataFourByte(uint* data, int index, uint value)
+        public static void SetDataFourByte(uint* data, int index, uint value)
 		{
 			*(data + index) = value;			
 		}		
